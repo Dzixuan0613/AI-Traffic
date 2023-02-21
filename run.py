@@ -14,13 +14,11 @@ if __name__ == "__main__":
     controller_type = "max_pressure"
 
     # LOAD SUMO STUFF
-    #cfgfilename = "test_1110.sumo.cfg" 
+    # cfgfilename = "test_1110.sumo.cfg"
     cfgfilename = "SUMO_Network.sumocfg"
 
-
-
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    filepath = os.path.join(dir_path,"network",cfgfilename)
+    filepath = os.path.join(dir_path, "network", cfgfilename)
     print(filepath)
 
     sumoCmd = ["sumo", "-c", filepath]
@@ -53,21 +51,19 @@ if __name__ == "__main__":
             print("in step " + str(step))
             for i in range(len(intersections)):
                 intersection = intersections[i]
-                state = network.getState(conn,intersection)
+                state = network.getState(conn, intersection)
                 geometry = network.getGeometry(intersection)
 
                 # get maxpressure controller
-                control = controller.getController(geometry,state)
+                control = controller.getController(geometry, state)
                 print("   " + intersection + " light list : " + str(control))
                 # update the state of the network
-                network.applyControl(control,conn,intersection)      
-                
-                #########write_state_to_file(state)   
-                metrics = updateMetrics(conn,metrics,state,geometry)
-            print()
-            print()
-           
+                network.applyControl(control, conn, intersection)
 
+                # write_state_to_file(state)
+                metrics = updateMetrics(conn, metrics, state, geometry)
+            print()
+            print()
 
             # write_state_to_file(state)
             metrics_lane = updateMetrics(
@@ -78,11 +74,11 @@ if __name__ == "__main__":
         # RUN Data Analysis
         step += 1
 
-
+    metrics = pd.DataFrame(metrics_lane)
+    metrics.to_csv("metrics_lane.csv")
     with open("metrics_lane.json", "w") as outfile:
         json.dump(metrics_lane, outfile)
     with open("metrics_vehicle.json", "w") as outfile:
         json.dump(metrics_vehicle, outfile)
 
     traci.close(False)
-
