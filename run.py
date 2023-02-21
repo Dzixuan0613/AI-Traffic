@@ -81,9 +81,9 @@ if __name__ == "__main__":
         json.dump(metrics_vehicle, outfile)
 
     metrics_l = pd.DataFrame(metrics_lane)
-    metrics_l.to_csv("metrics_lane.csv")
+    metrics_l.to_csv('metrics_lane.csv')
 
     metrics_v = pd.DataFrame(metrics_vehicle)
-    metrics_v.to_csv("metrics_vehicle.csv")
+    metrics_v.to_csv('metrics_vehicle.csv')
 
     traci.close(False)
