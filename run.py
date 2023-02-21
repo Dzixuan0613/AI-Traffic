@@ -74,11 +74,16 @@ if __name__ == "__main__":
         # RUN Data Analysis
         step += 1
 
-    metrics = pd.DataFrame(metrics_lane)
-    metrics.to_csv("metrics_lane.csv")
+    
     with open("metrics_lane.json", "w") as outfile:
         json.dump(metrics_lane, outfile)
     with open("metrics_vehicle.json", "w") as outfile:
         json.dump(metrics_vehicle, outfile)
+
+    metrics_l = pd.DataFrame(metrics_lane)
+    metrics_l.to_csv("metrics_lane.csv")
+
+    metrics_v = pd.DataFrame(metrics_vehicle)
+    metrics_v.to_csv("metrics_vehicle.csv")
 
     traci.close(False)
