@@ -7,7 +7,7 @@ import traci
 import os
 import sys
 import json
-from analysis import updateMetrics
+from data_logger import Data_Logger
 
 if __name__ == "__main__":
 
@@ -23,7 +23,9 @@ if __name__ == "__main__":
 
     sumoCmd = ["sumo", "-c", filepath]
     # sumoCmd = ["sumo-gui", "-c", filepath]  # if you want to see the simulation
-
+    runID = 'AAA'
+#create data logger, pass in runID
+    logger = Data_Logger(runID)
     # initialize the network object and controller object
     tracilabel = "sim1"
     traci.start(sumoCmd, label=tracilabel)
@@ -38,8 +40,6 @@ if __name__ == "__main__":
 
     step = 0
 
-    metrics_lane = {}
-    metrics_vehicle = {}
     while conn.simulation.getMinExpectedNumber() > 0:
         conn.simulationStep()
         if step > 1 and step % 30 == 0:
@@ -66,24 +66,21 @@ if __name__ == "__main__":
             print()
 
             # write_state_to_file(state)
-            metrics_lane = updateMetrics(
-                step, conn, metrics_lane, state, network.allLaneId, key='lane')
-            metrics_vehicle = updateMetrics(
-                step, conn, metrics_vehicle, state, network.allLaneId, key='vehicle')
+            logger.updateLane(step, conn, network.allLaneId)
+            logger.updateVeh(step, conn, state)
 
         # RUN Data Analysis
         step += 1
 
     
-    with open("metrics_lane.json", "w") as outfile:
-        json.dump(metrics_lane, outfile)
-    with open("metrics_vehicle.json", "w") as outfile:
-        json.dump(metrics_vehicle, outfile)
 
-    metrics_l = pd.DataFrame(metrics_lane)
-    metrics_l.to_csv('metrics_lane.csv')
+    
 
-    metrics_v = pd.DataFrame(metrics_vehicle)
-    metrics_v.to_csv('metrics_vehicle.csv')
+    logger.close()
+
+
 
     traci.close(False)
+
+# save csv files with special names
+# add to csv and dont save 
