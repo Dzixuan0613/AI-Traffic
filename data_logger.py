@@ -16,7 +16,7 @@ class Data_Logger:
         self.veh_file = open("{}_metrics_veh.csv".format(runID), "w")
 
         self.lane_file.write('step,laneID,WaitingTime,CO2\n')
-        self.veh_file.write('step,TimeLoss,AccumulatedWaitingTime')
+        self.veh_file.write('step,vehicleID,TimeLoss,AccumulatedWaitingTime\n')
 
     def updateLane(self, step, conn, allLaneId):
 
