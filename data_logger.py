@@ -34,8 +34,9 @@ class Data_Logger:
     def updateVeh(self, step, conn, state):
 
         for vehicle in state["vehicleID"]:
-            self.veh_file.write("".format(
+            self.veh_file.write("{},{},{},{}\n".format(
                 step,
+                vehicle,
                 conn.vehicle.getTimeLoss(vehicle),
                 conn.vehicle.getAccumulatedWaitingTime(vehicle)))
 
